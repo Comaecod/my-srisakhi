@@ -56,6 +56,11 @@ const images = [
 
 export default function ValentinesProposal() {
   const [step, setStep] = useState(0);
+  const delay = 30000;
+
+  const totalSeconds = Math.ceil(delay / 1000);
+
+  const [secondsLeft, setSecondsLeft] = useState(totalSeconds);
   const [position, setPosition] = useState<{
     top: string;
     left: string;
@@ -88,10 +93,17 @@ export default function ValentinesProposal() {
     if (step < 8) {
       const timer = setTimeout(() => {
         setStep((prevStep) => prevStep + 1);
-      }, 20000);
+      }, delay);
+
+      setSecondsLeft(Math.ceil(delay / 1000));
+
+      const countdownInterval = setInterval(() => {
+        setSecondsLeft((prev) => (prev > 1 ? prev - 1 : 0));
+      }, 1000);
 
       return () => {
         clearTimeout(timer);
+        clearInterval(countdownInterval);
         delete (window as any).goToProposal;
         delete (window as any).acceptDirectly;
         delete (window as any).fastForward;
@@ -111,6 +123,7 @@ export default function ValentinesProposal() {
           <PoemSlide
             slide={slides[step]}
             index={step}
+            secondsLeft={secondsLeft}
           />
         )}
 
