@@ -156,7 +156,7 @@ export default function ValentinesProposal() {
             </h3>
             <h2
               className={`text-5xl font-semibold mb-8 text-center ${playfairDisplay.className}`}>
-              Dharma, Artha, Kama, and Moksha?
+              Dharma, Artha, and Kama?
             </h2>
             <Image
               src='/krishna.gif'
@@ -164,6 +164,7 @@ export default function ValentinesProposal() {
               className='rounded-xl opacity-95'
               width={200}
               height={200}
+              unoptimized
             />
             <div className='flex space-x-4 mt-10'>
               <button
