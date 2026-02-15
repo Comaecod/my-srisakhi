@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 const START_TIME = 146; // 2:26
 const END_TIME = 236; // 3:56
-const FADE_DURATION = 1000;
+const MAX_VOLUME = 0.7; // 🔊 70% volume
 
 export default function OrientationGuard({
   children,
@@ -17,8 +17,7 @@ export default function OrientationGuard({
   const [hasInteracted, setHasInteracted] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const fadeFrame = useRef<number | null>(null);
-  const isPlayingRef = useRef(false); // 🔥 important fix
+  const isPlayingRef = useRef(false);
 
   /* ---------------- ORIENTATION CHECK ---------------- */
 
@@ -34,66 +33,31 @@ export default function OrientationGuard({
     return () => window.removeEventListener('resize', checkOrientation);
   }, []);
 
-  /* ---------------- FADE FUNCTIONS ---------------- */
-
-  const fade = useCallback((targetVolume: number, callback?: () => void) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const startVolume = audio.volume;
-    const startTime = performance.now();
-
-    const animate = (time: number) => {
-      const elapsed = time - startTime;
-      const progress = Math.min(elapsed / FADE_DURATION, 1);
-
-      // 🔊 VOLUME IS SET HERE
-      audio.volume = startVolume + (targetVolume - startVolume) * progress;
-
-      if (progress < 1) {
-        fadeFrame.current = requestAnimationFrame(animate);
-      } else {
-        callback?.();
-      }
-    };
-
-    if (fadeFrame.current) cancelAnimationFrame(fadeFrame.current);
-    fadeFrame.current = requestAnimationFrame(animate);
-  }, []);
-
-  const fadeIn = useCallback(() => fade(0.7), [fade]);
-  const fadeOut = useCallback((cb?: () => void) => fade(0, cb), [fade]);
-
   /* ---------------- AUDIO INIT ---------------- */
 
   useEffect(() => {
     const audio = new Audio('/photograph.mp3');
     audioRef.current = audio;
 
-    audio.volume = 0; // 🔊 initial volume set here
+    audio.volume = MAX_VOLUME; // 🔊 Always 70%
     audio.preload = 'auto';
 
     const handleTimeUpdate = () => {
       if (!isPlayingRef.current) return;
 
       if (audio.currentTime >= END_TIME) {
-        fadeOut(() => {
-          if (!isPlayingRef.current) return;
-          audio.currentTime = START_TIME;
-          audio.play();
-          fadeIn();
-        });
+        audio.currentTime = START_TIME;
+        audio.play();
       }
     };
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
 
     return () => {
-      if (fadeFrame.current) cancelAnimationFrame(fadeFrame.current);
       audio.pause();
       audio.removeEventListener('timeupdate', handleTimeUpdate);
     };
-  }, [fadeIn, fadeOut]);
+  }, []);
 
   /* ---------------- START ON FIRST CLICK ---------------- */
 
@@ -107,7 +71,6 @@ export default function OrientationGuard({
       audio.currentTime = START_TIME;
 
       audio.play().then(() => {
-        fadeIn();
         isPlayingRef.current = true;
         setIsPlaying(true);
         setHasInteracted(true);
@@ -121,7 +84,7 @@ export default function OrientationGuard({
     return () => {
       window.removeEventListener('click', startMusic);
     };
-  }, [fadeIn, hasInteracted]);
+  }, [hasInteracted]);
 
   /* ---------------- TOGGLE MUSIC ---------------- */
 
@@ -130,11 +93,11 @@ export default function OrientationGuard({
     if (!audio) return;
 
     if (!isPlayingRef.current) {
-      audio.play().then(() => fadeIn());
+      audio.play();
       isPlayingRef.current = true;
       setIsPlaying(true);
     } else {
-      fadeOut(() => audio.pause());
+      audio.pause();
       isPlayingRef.current = false;
       setIsPlaying(false);
     }
