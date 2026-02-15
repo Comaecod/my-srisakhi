@@ -61,7 +61,7 @@ export default function OrientationGuard({
     fadeFrame.current = requestAnimationFrame(animate);
   }, []);
 
-  const fadeIn = useCallback(() => fade(1), [fade]);
+  const fadeIn = useCallback(() => fade(0.7), [fade]);
   const fadeOut = useCallback((cb?: () => void) => fade(0, cb), [fade]);
 
   /* ---------------- AUDIO INIT ---------------- */
