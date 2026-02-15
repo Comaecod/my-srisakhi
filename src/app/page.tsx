@@ -22,7 +22,7 @@ export default function Home() {
   };
 
   return (
-    <OrientationGuard>
+    /* <OrientationGuard>
       <main className='flex items-center justify-center min-h-screen bg-black overflow-hidden relative'>
         {!showValentinesProposal ? (
           <motion.div
@@ -45,6 +45,8 @@ export default function Home() {
         )}
       </main>
       <ConsoleInjector />
-    </OrientationGuard>
+    </OrientationGuard> */
+
+    <div>Nothing here!</div>
   );
 }
