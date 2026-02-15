@@ -151,21 +151,20 @@ export default function ValentinesProposal() {
               ))}
             </div>
             <h3
-              className={`text-3xl font-semibold mb-8 text-center ${playfairDisplay.className}`}>
+              className={`text-2xl md:text-3xl font-semibold mb-8 text-center ${playfairDisplay.className}`}>
               Will you be my companion in
-            </h3>
-            <h2
-              className={`text-5xl font-semibold mb-8 text-center ${playfairDisplay.className}`}>
+              <br />
               Dharma, Artha, and Kama?
-            </h2>
-            <Image
-              src='/krishna.gif'
-              alt='Sad Hamster'
-              className='rounded-xl opacity-95'
-              width={200}
-              height={200}
-              unoptimized
-            />
+            </h3>
+            <div className='relative w-40 sm:w-28 md:w-56 lg:w-64 aspect-square'>
+              <Image
+                src='/krishna.gif'
+                alt='Krishna'
+                fill
+                className='rounded-2xl opacity-95 object-contain'
+                unoptimized
+              />
+            </div>
             <div className='flex space-x-4 mt-10'>
               <button
                 className='px-6 py-2 text-lg font-semibold text-white bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl hover:from-pink-600 hover:to-rose-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl'
@@ -198,16 +197,15 @@ export default function ValentinesProposal() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}>
-            <span className='text-red-400 text-5xl font-bold mb-4 animate-pulse'>
-              I LOVE YOU 💕
+            <span className='text-red-400 text-3xl md:text-5xl font-bold mb-4 animate-pulse'>
+              I Love You 💕
             </span>
-            <br />
             <Image
               src='/radhekrishna.gif'
               alt='Hamster Feliz'
               className='rounded-3xl'
-              width={200}
-              height={200}
+              width={150}
+              height={150}
               unoptimized
             />
           </motion.div>

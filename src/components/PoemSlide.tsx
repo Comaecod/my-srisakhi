@@ -18,19 +18,19 @@ export const PoemSlide = ({
   return (
     <motion.div
       key={`step-${index}`}
-      className={`max-w-7xl mx-auto px-6 flex flex-col md:flex-row ${
+      className={`max-w-7xl mx-auto px-6 py-16 md:py-24 flex flex-col md:flex-row ${
         isReverse ? 'md:flex-row-reverse' : ''
-      } items-center gap-16`}
+      } items-center gap-10 md:gap-16`}
       transition={{ duration: 1 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}>
-      {/* Image - hidden on mobile */}
+      {/* Image */}
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
-        className='hidden md:block relative w-72 md:w-96 aspect-square rounded-2xl overflow-hidden shadow-xl'>
+        className='relative w-64 sm:w-72 md:w-96 aspect-square rounded-2xl overflow-hidden shadow-xl'>
         <Image
           src={slide.image}
           alt={slide.alt}
@@ -46,9 +46,11 @@ export const PoemSlide = ({
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
         className='max-w-xl text-center md:text-left'>
-        <h3 className='text-3xl font-medium mb-6'>{slide.title}</h3>
+        <h3 className='text-2xl md:text-3xl font-medium mb-6'>{slide.title}</h3>
 
-        <p className='text-lg leading-loose text-gray-300'>{slide.content}</p>
+        <p className='text-base md:text-lg leading-loose text-gray-300'>
+          {slide.content}
+        </p>
 
         {/* Subtle countdown */}
         <div className='mt-6 text-xs text-gray-500 font-mono tracking-wide'>
