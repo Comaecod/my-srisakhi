@@ -4,57 +4,60 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { type slides } from '@/constants';
 
-export const PoemSlide = ({
-  slide,
-  index,
-  secondsLeft,
-}: {
+interface PoemSlideProps {
   slide: (typeof slides)[number];
   index: number;
   secondsLeft: number;
-}) => {
+}
+
+export default function PoemSlide({ slide, index, secondsLeft }: PoemSlideProps) {
   const isReverse = index % 2 !== 0;
 
   return (
     <motion.div
       key={`step-${index}`}
-      className={`max-w-7xl mx-auto px-6 flex flex-col md:flex-row ${
+      className={`w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row ${
         isReverse ? 'md:flex-row-reverse' : ''
-      } items-center gap-16`}
+      } items-center gap-6 sm:gap-10 md:gap-16`}
       transition={{ duration: 1 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}>
-      {/* Image - hidden on mobile */}
+      exit={{ opacity: 0 }}
+    >
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
-        className='hidden md:block relative w-72 md:w-96 aspect-square rounded-2xl overflow-hidden shadow-xl'>
+        className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-96 lg:h-96 rounded-2xl overflow-hidden shadow-xl shrink-0"
+      >
         <Image
           src={slide.image}
           alt={slide.alt}
           fill
-          className='object-cover'
+          className="object-cover"
+          sizes="(max-width: 640px) 192px, (max-width: 768px) 256px, (max-width: 1024px) 288px, 384px"
           unoptimized
         />
       </motion.div>
 
-      {/* Text */}
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
-        className='max-w-xl text-center md:text-left'>
-        <h3 className='text-3xl font-medium mb-6'>{slide.title}</h3>
+        className="max-w-xl text-center md:text-left"
+      >
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 sm:mb-6">
+          {slide.title}
+        </h3>
 
-        <p className='text-lg leading-loose text-gray-300'>{slide.content}</p>
+        <p className="text-sm sm:text-base md:text-lg leading-loose text-gray-300">
+          {slide.content}
+        </p>
 
-        {/* Subtle countdown */}
-        <div className='mt-6 text-xs text-gray-500 font-mono tracking-wide'>
+        <div className="mt-4 sm:mt-6 text-xs text-gray-500 font-mono tracking-wide">
           {secondsLeft > 0 && `${secondsLeft}s`}
         </div>
       </motion.div>
     </motion.div>
   );
-};
+}

@@ -2,10 +2,12 @@
 
 import { useEffect } from 'react';
 
+let consoleShown = false;
+
 export default function ConsoleInjector() {
   useEffect(() => {
-    // Prevent multiple logs (in case of fast refresh)
-    if ((window as any).__valentineConsoleShown) return;
+    if (consoleShown) return;
+    consoleShown = true;
 
     console.info(`
     💘 Developer Shortcuts Available 💘
@@ -17,8 +19,6 @@ export default function ConsoleInjector() {
 
     Type any of these in the console.
 `);
-
-    (window as any).__valentineConsoleShown = true;
   }, []);
 
   return null;
