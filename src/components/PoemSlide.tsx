@@ -11,14 +11,10 @@ interface PoemSlideProps {
 }
 
 export default function PoemSlide({ slide, index, secondsLeft }: PoemSlideProps) {
-  const isReverse = index % 2 !== 0;
-
   return (
     <motion.div
       key={`step-${index}`}
-      className={`w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row ${
-        isReverse ? 'md:flex-row-reverse' : ''
-      } items-center gap-6 sm:gap-10 md:gap-16`}
+      className="w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-10 md:gap-16"
       transition={{ duration: 1 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -44,7 +40,7 @@ export default function PoemSlide({ slide, index, secondsLeft }: PoemSlideProps)
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
-        className="max-w-xl text-center md:text-left"
+        className="max-w-xl text-center"
       >
         <h3 className="text-xl sm:text-2xl md:text-3xl font-medium mb-4 sm:mb-6">
           {slide.title}

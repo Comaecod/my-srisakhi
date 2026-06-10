@@ -7,7 +7,6 @@ interface GameTileProps {
   imageSrc: string;
   index: number;
   isFaceUp: boolean;
-  isIncorrect: boolean;
   onClick: () => void;
 }
 
@@ -15,7 +14,6 @@ export default function GameTile({
   imageSrc,
   index,
   isFaceUp,
-  isIncorrect,
   onClick,
 }: GameTileProps) {
   return (
@@ -25,22 +23,14 @@ export default function GameTile({
       onClick={onClick}
       style={{ perspective: '800px' }}
     >
-      {!isFaceUp && (
-        <motion.div
-          className="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 rounded-sm lg:rounded-md absolute inset-0 z-10"
-          initial={{ rotateY: 0 }}
-          animate={{ rotateY: isFaceUp ? 180 : 0 }}
-          transition={{ duration: 0.4 }}
-          style={{ backfaceVisibility: 'hidden' }}
-        />
-      )}
-
-      {isFaceUp && (
-        <motion.div
-          className="w-full h-full absolute inset-0"
-          initial={{ rotateY: -180 }}
-          animate={{ rotateY: 0 }}
-          transition={{ duration: 0.4 }}
+      <motion.div
+        className="relative w-full h-full"
+        animate={{ rotateY: isFaceUp ? 0 : 180 }}
+        transition={{ duration: 0.5 }}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <div
+          className="absolute inset-0"
           style={{ backfaceVisibility: 'hidden' }}
         >
           <Image
@@ -51,17 +41,15 @@ export default function GameTile({
             className="rounded-sm lg:rounded-md object-cover"
             unoptimized
           />
-        </motion.div>
-      )}
+        </div>
 
-      {isIncorrect && (
-        <motion.div
-          className="absolute inset-0 z-20 rounded-sm lg:rounded-md bg-red-500/70"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.7, 0] }}
-          transition={{ duration: 0.4 }}
-        />
-      )}
+        <div
+          className="absolute inset-0"
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+        >
+          <div className="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 rounded-sm lg:rounded-md" />
+        </div>
+      </motion.div>
     </motion.div>
   );
 }

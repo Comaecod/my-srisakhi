@@ -3,14 +3,22 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import GameTile from './GameTile';
 import SkipTile from './SkipTile';
-import { imagePaths } from '@/constants/images';
+import { imagePaths } from '@/constants';
 
 const imagePairs = imagePaths.flatMap((image) => [image, image]);
 
-function shuffleArray<T>(array: T[]): T[] {
+function seededRandom(seed: number) {
+  let s = seed | 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) | 0;
+    return (s >>> 0) / 0x100000000;
+  };
+}
+
+function shuffleArray<T>(array: T[], rng: () => number): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
@@ -35,8 +43,7 @@ interface PhotoPairGameProps {
 export default function PhotoPairGame({ handleShowProposal }: PhotoPairGameProps) {
   const [selected, setSelected] = useState<number[]>([]);
   const [matched, setMatched] = useState<number[]>([]);
-  const [incorrect, setIncorrect] = useState<number[]>([]);
-  const [shuffledImages] = useState(() => shuffleArray([...imagePairs]));
+  const [shuffledImages] = useState(() => shuffleArray([...imagePairs], seededRandom(42)));
   const [showSkip, setShowSkip] = useState(false);
 
   useEffect(() => {
@@ -64,29 +71,23 @@ export default function PhotoPairGame({ handleShowProposal }: PhotoPairGameProps
   const handleClick = useCallback(
     (index: number) => {
       if (selected.length === 2 || matched.includes(index) || selected.includes(index)) return;
-
-      if (selected.length === 1) {
-        const firstIndex = selected[0];
-        setSelected((prev) => [...prev, index]);
-
-        if (shuffledImages[firstIndex] === shuffledImages[index]) {
-          setMatched((prev) => [...prev, firstIndex, index]);
-          setSelected([]);
-        } else {
-          setTimeout(() => {
-            setIncorrect([firstIndex, index]);
-            setTimeout(() => {
-              setIncorrect([]);
-              setSelected([]);
-            }, 500);
-          }, 500);
-        }
-      } else {
-        setSelected([index]);
-      }
+      setSelected((prev) => [...prev, index]);
     },
-    [selected, matched, shuffledImages]
+    [selected, matched]
   );
+
+  useEffect(() => {
+    if (selected.length !== 2) return;
+
+    const [a, b] = selected;
+    const timer = setTimeout(() => {
+      if (shuffledImages[a] === shuffledImages[b]) {
+        setMatched((prev) => [...prev, a, b]);
+      }
+      setSelected([]);
+    }, shuffledImages[a] === shuffledImages[b] ? 600 : 700);
+    return () => clearTimeout(timer);
+  }, [selected, shuffledImages]);
 
   const handleSkip = useCallback(() => {
     setMatched(Array.from({ length: imagePairs.length }, (_, i) => i));
@@ -105,7 +106,7 @@ export default function PhotoPairGame({ handleShowProposal }: PhotoPairGameProps
   );
 
   return (
-    <div className="grid grid-cols-9 gap-[2px] sm:gap-1 md:gap-1.5 lg:gap-2 max-w-[95vw] mx-auto place-items-center">
+    <div suppressHydrationWarning className="grid grid-cols-9 gap-[2px] sm:gap-1 md:gap-1.5 lg:gap-2 max-w-[95vw] mx-auto place-items-center">
       {heartLayout.flat().map((cell, i) => {
         if (cell === 'skip') {
           return (
@@ -126,7 +127,6 @@ export default function PhotoPairGame({ handleShowProposal }: PhotoPairGameProps
               imageSrc={shuffledImages[index]}
               index={index}
               isFaceUp={selected.includes(index) || matched.includes(index)}
-              isIncorrect={incorrect.includes(index)}
               onClick={() => handleClick(index)}
             />
           </div>

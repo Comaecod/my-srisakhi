@@ -1,3 +1,9 @@
+const IMAGE_COUNT = 18;
+export const imagePaths = Array.from(
+  { length: IMAGE_COUNT },
+  (_, i) => `/game-photos/${i + 1}.jpg`
+);
+
 export const slides = [
   {
     title: 'The Rain and the Raga',

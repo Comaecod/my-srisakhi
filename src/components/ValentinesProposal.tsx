@@ -7,7 +7,7 @@ import Fireworks from '@fireworks-js/react';
 import Image from 'next/image';
 import PoemSlide from './PoemSlide';
 import { slides } from '@/constants';
-import { imagePaths } from '@/constants/images';
+import { imagePaths } from '@/constants';
 
 const playfairDisplay = Playfair_Display({
   display: 'swap',

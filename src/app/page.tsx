@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PhotoPairGame from '@/components/PhotoPairGame';
 import ValentinesProposal from '@/components/ValentinesProposal';
 import TextFooter from '@/components/TextFooter';
-import OrientationGuard from '@/components/OrientationGuard';
 import ConsoleInjector from '@/components/ConsoleInjector';
 import MusicPlayer from '@/components/MusicPlayer';
 
@@ -19,7 +18,7 @@ export default function Home() {
   }, []);
 
   return (
-    <OrientationGuard>
+    <>
       <main className="flex items-center justify-center min-h-screen min-h-dvh bg-black overflow-hidden relative">
         <AnimatePresence mode="wait">
           {!showProposal ? (
@@ -49,6 +48,6 @@ export default function Home() {
       </main>
       <MusicPlayer />
       <ConsoleInjector />
-    </OrientationGuard>
+    </>
   );
 }

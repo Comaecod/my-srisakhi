@@ -10,9 +10,8 @@ interface SkipTileProps {
 export default function SkipTile({ onClick, visible }: SkipTileProps) {
   return (
     <motion.div
-      className="w-full h-full bg-gradient-to-br from-pink-600 to-rose-700 rounded-sm lg:rounded-md flex items-center justify-center cursor-pointer"
-      onClick={onClick}
-      whileHover={{ scale: 1.05 }}
+      className={`w-full h-full bg-gradient-to-br from-pink-600 to-rose-700 rounded-sm lg:rounded-md flex items-center justify-center ${visible ? 'cursor-pointer' : ''}`}
+      onClick={visible ? onClick : undefined}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={
         visible
