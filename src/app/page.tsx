@@ -7,7 +7,7 @@ import ValentinesProposal from '@/components/ValentinesProposal';
 import TextFooter from '@/components/TextFooter';
 import OrientationGuard from '@/components/OrientationGuard';
 import ConsoleInjector from '@/components/ConsoleInjector';
-
+import MusicPlayer from '@/components/MusicPlayer';
 
 export default function Home() {
   const [showProposal, setShowProposal] = useState(false);
@@ -47,6 +47,7 @@ export default function Home() {
           )}
         </AnimatePresence>
       </main>
+      <MusicPlayer />
       <ConsoleInjector />
     </OrientationGuard>
   );

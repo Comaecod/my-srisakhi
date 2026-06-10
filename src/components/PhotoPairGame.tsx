@@ -37,6 +37,7 @@ export default function PhotoPairGame({ handleShowProposal }: PhotoPairGameProps
   const [matched, setMatched] = useState<number[]>([]);
   const [incorrect, setIncorrect] = useState<number[]>([]);
   const [shuffledImages] = useState(() => shuffleArray([...imagePairs]));
+  const [showSkip, setShowSkip] = useState(false);
 
   useEffect(() => {
     imagePaths.forEach((src) => {
@@ -53,6 +54,12 @@ export default function PhotoPairGame({ handleShowProposal }: PhotoPairGameProps
       delete window.skipPhotoPairGame;
     };
   }, []);
+
+  useEffect(() => {
+    if (matched.length === imagePairs.length) return;
+    const timer = setTimeout(() => setShowSkip(true), 15000);
+    return () => clearTimeout(timer);
+  }, [matched]);
 
   const handleClick = useCallback(
     (index: number) => {
@@ -103,7 +110,7 @@ export default function PhotoPairGame({ handleShowProposal }: PhotoPairGameProps
         if (cell === 'skip') {
           return (
             <div key={i} className={cardClass}>
-              <SkipTile onClick={handleSkip} />
+              <SkipTile onClick={handleSkip} visible={showSkip} />
             </div>
           );
         }
